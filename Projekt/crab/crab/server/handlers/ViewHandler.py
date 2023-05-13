@@ -1,5 +1,5 @@
 from crab.server.handlers.LoggerHandler import CrabLogger
-from crab.utiles.register import ErrorHandler
+from crab.utiles.register import Error404Handler, Error403Handler, Error500Handler
 
 
 from http.server import BaseHTTPRequestHandler
@@ -17,14 +17,34 @@ class ViewHandler(BaseHTTPRequestHandler):
 
         self.url_patterns = self.urls.url_patterns
         self.status_code = http.HTTPStatus.ACCEPTED
-        self.query = request
+        self.request = request
         self.client_address = client_address
         self.server = server
+
+
+        # This data will be passed to each view
+        self.data = {
+            'url_patterns': self.url_patterns,
+            'status_code': self.status_code,
+            'client_address': self.client_address,
+            'server': self.server,
+            'logger': self.logger,
+        }
 
         super().__init__(request, client_address, server)
 
     
     def handle_request(self):
+        method = self.command
+        self.logger.debug(f"Test HTTPS method: {self.command}")
+
+        if method != 'GET' and method != 'POST':
+            self.status_code = http.HTTPStatus.NOT_FOUND
+            response = Error404Handler.run(self)
+            self.logger.debug(f"Handler404 {self.path}:{self.status_code}")
+            self.get(response)
+            return
+
         try:
             for url_pattern in self.url_patterns:
                 if isinstance(url_pattern[0], str):
@@ -32,8 +52,8 @@ class ViewHandler(BaseHTTPRequestHandler):
                     if url_pattern[0] == self.path:
                         self.logger.debug(f"Path Match: {self.path}")
                         response = url_pattern[1](self)
-                        self.send_headers(response)
-                        self.write_content(response)
+                        self.logger.debug(f"{method} {self.path}:{self.status_code}")
+                        self.get(response)
                         break
                 else:
                     self.logger.debug(f"Test regex path: {self.path}")
@@ -43,38 +63,38 @@ class ViewHandler(BaseHTTPRequestHandler):
                         params = match.groupdict()
                         self.logger.debug(f"URL params: {params}")
                         response = url_pattern[1](self, **params)
-                        self.send_headers(response)
-                        self.write_content(response)
+                        self.logger.debug(f"{method} {self.path}:{self.status_code}")
+                        self.get(response)
                         break
             else:
                 self.status_code = http.HTTPStatus.NOT_FOUND
-                self.logger.debug(f"GET {self.path}:{self.status_code}")
-                response = ErrorHandler._error_handler(self)
-                self.logger.debug(f"Returned Error: {ErrorHandler._error_handler}:{self.status_code} \n, {str(response)}, {type(response)}")
-                self.send_headers(response)
-                self.write_content(response)
+                response = Error404Handler.run(self)
+                self.logger.debug(f"Handler404 {self.path}:{self.status_code}")
+                self.get(response)
                 
         except Exception as error:
             self.status_code = http.HTTPStatus.INTERNAL_SERVER_ERROR
-            self.logger.error(f"GET {self.path}:{self.status_code}, ERROR: {error}")
-            response = ErrorHandler.error(self)
-            self.logger.debug(f"Returned Error: {str(response)}, {type(response)}")
-            self.send_headers(response)
-            self.write_content(response)
+            self.logger.error(f"Handler500 {self.path}:{self.status_code}, ERROR: {error}")
+            response = Error500Handler.run(self)
+            self.get(response)
            
 
-    def send_headers(self, response):
+    def get(self, response):
         self.send_response(response.status_code)
 
         headers = dict(response.get_header().items())
         for key, value in headers.items():
             self.send_header(key, value)
-
-    def write_content(self, response):
         self.end_headers()
-        self.wfile.write(response.get_content().encode("utf-8"))
+        self.wfile.write(response.get_content())
         self.status_code = response.status_code
     
+
+    # Supported html metods
     def do_GET(self):
-        self.logger.debug(f'User request path: {self.path}')
+        self.logger.debug(f'User `GET` request path: {self.path}')
+        self.handle_request()
+
+    def do_POST(self):
+        self.logger.debug(f'User `POST` request path: {self.path}')
         self.handle_request()

@@ -6,7 +6,6 @@ import importlib
 import os
 import ssl
 
-VERSION = "1.0.0"
 
 def run_crab(path):
 

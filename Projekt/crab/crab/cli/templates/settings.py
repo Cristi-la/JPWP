@@ -11,3 +11,19 @@ KEY_FILE = "key.pem"  # Path to SSL key file
 LOG_TO_CONSOLE = True  # Set to True to log messages to console
 LOG_FILE = "server.log"  # Path to log file
 LOG_LEVEL = logging.DEBUG  # Set the log level: DEBUG, INFO, WARNING, ERROR, CRITICAL
+
+
+DATATBASE = {
+    'default': {
+        'ip': '',
+        'username':'',
+        'password':'',
+        'engine': '',
+    },
+    'hj': {
+        'ip': '',
+        'username':'',
+        'password':'',
+        'engine': '',
+    }
+}
