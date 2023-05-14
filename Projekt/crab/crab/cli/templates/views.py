@@ -1,12 +1,21 @@
-from crab.response.generic import JsonResponse
+from crab.response.generic import BaseResponse, JsonResponse, XmlResponse, PDFResponse, ImageResponse
 from crab.utiles.register import Error404Handler, Error403Handler, Error500Handler
 from crab.utiles.register import post, get
+
 import json
+from datetime import datetime, timedelta
 
 import models
 
 def home(request):
-    response_data = {'message': 'Hello, world!'}
+    response = JsonResponse(json.dumps({'message': f'Hello World!'}))
+    expiration_time = datetime.now() + timedelta(days=7)
+    response.set_cookie('username', 'john', expires=expiration_time)
+
+    return response
+
+def hello(request, name):
+    response_data = {'message': f'Hello {name}'}
     return JsonResponse(json.dumps(response_data))
 
 def request(request):
@@ -14,15 +23,25 @@ def request(request):
         'status_code': request.status_code,
     }))
 
-def hello(request, name):
-    response_data = {'message': f'Hello {name}'}
-    return JsonResponse(json.dumps(response_data))
+
+def xml(request):
+    return XmlResponse('<?xml version="1.0" encoding="ISO-8859-1"?><catalog><title>Empire Burlesque</title></catalog>')
+
+def pdf(request):
+    pdf_path = 'example.pdf'
+    return PDFResponse(pdf_path)
+
+def image(request):
+    image_path = 'example.png'
+    return ImageResponse(image_path)
 
 
 @post
 def return_error(request, name):
     response_data = {'message': f'Hello {name}'}
     return JsonResponse(response_data)
+
+
 
 
 # Error handlers

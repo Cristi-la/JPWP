@@ -12,8 +12,9 @@ setup(
     include_package_data=True,
     install_requires=[
         # list dependencies here
+        'PyPDF2',
     ],
     description='CRAB - compact REST Api backend',
-    author='test',
-    author_email='kstefans@studnet.agh.edu.pl',
+    author=['Krzysztof Stefanski', 'Mateusz Setkowicz'],
+    author_email=['kstefans@studnet.agh.edu.pl', 'setkowicz@studnet.agh.edu.pl'],
 )

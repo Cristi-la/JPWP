@@ -84,7 +84,8 @@ class ViewHandler(BaseHTTPRequestHandler):
 
         headers = dict(response.get_header().items())
         for key, value in headers.items():
-            self.send_header(key, value)
+            self.logger.debug(f'Set header, key: {key}, value: {value}')
+            self.send_header(str(key), str(value))
         self.end_headers()
         self.wfile.write(response.get_content())
         self.status_code = response.status_code
