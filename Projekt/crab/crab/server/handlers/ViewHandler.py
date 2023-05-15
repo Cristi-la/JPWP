@@ -1,12 +1,14 @@
 from crab.server.handlers.LoggerHandler import CrabLogger
 from crab.utiles.register import Error404Handler, Error403Handler, Error500Handler
-
+from crab.server.handlers.constans import Methods
 
 from http.server import BaseHTTPRequestHandler
 
 import http
 from http.server import BaseHTTPRequestHandler
 import importlib
+
+
 
 
 class ViewHandler(BaseHTTPRequestHandler):
@@ -20,6 +22,7 @@ class ViewHandler(BaseHTTPRequestHandler):
         self.request = request
         self.client_address = client_address
         self.server = server
+        self.method = None
 
 
         # This data will be passed to each view
@@ -95,7 +98,9 @@ class ViewHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         self.logger.debug(f'User `GET` request path: {self.path}')
         self.handle_request()
+        self.method = Methods.GET
 
     def do_POST(self):
         self.logger.debug(f'User `POST` request path: {self.path}')
         self.handle_request()
+        self.method = Methods.POST

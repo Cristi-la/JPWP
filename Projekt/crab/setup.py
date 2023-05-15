@@ -13,6 +13,7 @@ setup(
     install_requires=[
         # list dependencies here
         'PyPDF2',
+        'sqlalchemy'
     ],
     description='CRAB - compact REST Api backend',
     author=['Krzysztof Stefanski', 'Mateusz Setkowicz'],

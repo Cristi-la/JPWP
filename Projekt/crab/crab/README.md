@@ -14,7 +14,7 @@ Crab is a Python package for building web applications. It provides a lightweigh
 You can install Crab using pip:
 
 ```bash
-python3 .\setup.py sdist
+python3 ./setup.py sdist
 pip3 install ./crab/dist/crab-1.0.0.tar.gz
 ```
 

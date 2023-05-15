@@ -1,8 +1,10 @@
 from crab.response.generic import JsonResponse
-
+from crab.server.handlers.constans import Methods
+from crab.server.handlers.LoggerHandler import CrabLogger
 import http
 import json
 from functools import wraps
+import importlib
 
 class BaseErrorHandler:
     _error_handler = None
@@ -68,7 +70,10 @@ class Error403Handler(BaseErrorHandler):
 def post(view_func):
     @wraps(view_func)
     def wrapper(request, *args, **kwargs):
-        if request.method == "POST":
+        settings = importlib.import_module("settings")
+        logger = CrabLogger(__name__, settings)
+        logger
+        if request.method == Methods.POST:
             return view_func(request, *args, **kwargs)
         else:
             return Error403Handler.run(request)
@@ -77,7 +82,8 @@ def post(view_func):
 def get(view_func):
     @wraps(view_func)
     def wrapper(request, *args, **kwargs):
-        if request.method == "GET":
+
+        if request.method == Methods.GET:
             return view_func(request, *args, **kwargs)
         else:
             return Error403Handler.run(request)

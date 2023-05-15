@@ -1,17 +1,21 @@
 from crab.response.generic import BaseResponse, JsonResponse, XmlResponse, PDFResponse, ImageResponse
 from crab.utiles.register import Error404Handler, Error403Handler, Error500Handler
 from crab.utiles.register import post, get
+from crab.utiles.serializer import add_time
+
 import json
 from datetime import datetime, timedelta
 from models import *
 
+@add_time
 def home(request):
-    response = JsonResponse(json.dumps({'message': f'Hello World!'}))
+    response = JsonResponse(json.dumps({'message': 'Hello World!'}))
     expiration_time = datetime.now() + timedelta(days=7)
     response.set_cookie('username', 'john', expires=expiration_time)
 
     return response
 
+@get
 def hello(request, name):
     response_data = {'message': f'Hello {name}'}
     return JsonResponse(json.dumps(response_data))
@@ -25,17 +29,15 @@ def request(request):
 def xml(request):
     return XmlResponse('<?xml version="1.0" encoding="ISO-8859-1"?><catalog><title>Empire Burlesque</title></catalog>')
 
-# Nie działa naprawić
-# def pdf(request):
-#     pdf_path = 'example.pdf'
-#     return PDFResponse(pdf_path)
-
 def image(request):
     image_path = 'example.png'
     return ImageResponse(image_path)
 
-# Sprawdzić czy działa
 @post
+def only_post(request):
+    response_data = {'message': 'Only user who post data can access this data'}
+    return JsonResponse(response_data)
+
 def return_error(request, name):
     response_data = {'message': f'Hello {name}'}
     return JsonResponse(response_data)
@@ -63,7 +65,7 @@ def database(request):
     for i in data:
         data_dict = {'id': i.id, 'created_at': i.created_at, 'updated_at': i.updated_at, 'street': i.street,
                      'city': i.city, 'province': i.province, 'zip_code': i.zip_code}
-        result += json.dumps(data_dict, default=datetime_encoder) + "\n"
+        result += json.dumps(data_dict, default=datetime_encoder)
 
     return JsonResponse(json.dumps(result))
 

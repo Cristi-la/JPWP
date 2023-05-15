@@ -1,12 +1,12 @@
-from views import home, hello, request, return_error, database, xml, image
+from views import home, hello, request, return_error, database, xml, image, only_post
 import re
 
 
 url_patterns = [
     ('/', home),
     ('/xml', xml),
+    ('/only_post', only_post),
     ('/image', image),
-    # ('/pdf', pdf), Not working correctly at the time being
     ('/request', request),
     ('/error_500', return_error),
     ('/database', database),
