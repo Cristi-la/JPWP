@@ -27,15 +27,16 @@ def request(request):
 def xml(request):
     return XmlResponse('<?xml version="1.0" encoding="ISO-8859-1"?><catalog><title>Empire Burlesque</title></catalog>')
 
-def pdf(request):
-    pdf_path = 'example.pdf'
-    return PDFResponse(pdf_path)
+# Nie działa naprawić
+# def pdf(request):
+#     pdf_path = 'example.pdf'
+#     return PDFResponse(pdf_path)
 
 def image(request):
     image_path = 'example.png'
     return ImageResponse(image_path)
 
-
+# Sprawdzić czy działa 
 @post
 def return_error(request, name):
     response_data = {'message': f'Hello {name}'}
