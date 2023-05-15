@@ -14,7 +14,7 @@ LOG_LEVEL = logging.DEBUG  # Set the log level: DEBUG, INFO, WARNING, ERROR, CRI
 
 DATABASE = {
     'local': {
-        'database_name': 'mydatabase.db',
+        'database_name': 'jj.db',
         'engine': 'sqlite:///',
     },
     'user': {

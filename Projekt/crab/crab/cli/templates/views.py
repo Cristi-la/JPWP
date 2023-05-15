@@ -50,7 +50,7 @@ def database(request):
 
     Addresses.create()
     Residents.create()
-    if len(Addresses.read()) < 5:
+    if len(Addresses.read()) < 15:
         addresses_dict = [{'street': 'Krakowska', 'city': 'Krakow', 'province': 'Malopolska', 'zip_code': '30-320'},
                         {'street': 'Mazowiecka', 'city': 'Krakow', 'province': 'Malopolska', 'zip_code': '30-424'},
                         {'street': 'Zalewska', 'city': 'Krakow', 'province': 'Malopolska', 'zip_code': '30-333'},

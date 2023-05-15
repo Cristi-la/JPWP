@@ -4,10 +4,15 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 from crab.cli.templates.settings import DATABASE
 
-if DATABASE['user']['ip'] == '' or DATABASE['username']['ip'] == '' or DATABASE['password']['ip'] == '' or DATABASE['engine']['ip'] == '':
-    url = DATABASE['local']['engine'] + DATABASE['local']['database_name']
+import importlib
+
+
+settings = importlib.import_module("settings")
+
+if settings.DATABASE['user']['ip'] == '' or settings.DATABASE['username']['ip'] == '' or settings.DATABASE['password']['ip'] == '' or settings.DATABASE['engine']['ip'] == '':
+    url = settings.DATABASE['local']['engine'] + settings.DATABASE['local']['database_name']
 else:
-    url = DATABASE['user']['engine'] + DATABASE['user']['username'] + DATABASE['user']['password'] + DATABASE['user']['ip']
+    url = settings.DATABASE['user']['engine'] + settings.DATABASE['user']['username'] + settings.DATABASE['user']['password'] + settings.DATABASE['user']['ip']
 
 Base = declarative_base()
 db_engine = create_engine(url)
