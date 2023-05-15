@@ -80,5 +80,5 @@ def get(view_func):
         if request.method == "GET":
             return view_func(request, *args, **kwargs)
         else:
-            return  Error403Handler.run(request)
+            return Error403Handler.run(request)
     return wrapper

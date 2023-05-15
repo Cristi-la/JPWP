@@ -12,18 +12,15 @@ LOG_TO_CONSOLE = True  # Set to True to log messages to console
 LOG_FILE = "server.log"  # Path to log file
 LOG_LEVEL = logging.DEBUG  # Set the log level: DEBUG, INFO, WARNING, ERROR, CRITICAL
 
-
-DATATBASE = {
-    'default': {
-        'ip': '',
-        'username':'',
-        'password':'',
-        'engine': '',
+DATABASE = {
+    'local': {
+        'database_name': 'mydatabase.db',
+        'engine': 'sqlite:///',
     },
-    'hj': {
+    'user': {
         'ip': '',
-        'username':'',
-        'password':'',
+        'username': '',
+        'password': '',
         'engine': '',
     }
 }

@@ -1,4 +1,4 @@
-from views import home, hello, request, return_error, xml, image
+from views import home, hello, request, return_error, database, xml, image
 import re
 
 
@@ -9,5 +9,6 @@ url_patterns = [
     # ('/pdf', pdf), Not working correctly at the time being
     ('/request', request),
     ('/error_500', return_error),
+    ('/database', database),
     (re.compile(r'^/hello/(?P<name>\w+)/$'), hello),
 ]

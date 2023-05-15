@@ -1,16 +1,14 @@
 from crab.server.handlers.ViewHandler import ViewHandler 
-from crab.server.handlers.ServerHandler import  ThreadedHTTPServer
-from crab.server.handlers.LoggerHandler import  CrabLogger
+from crab.server.handlers.ServerHandler import ThreadedHTTPServer
+from crab.server.handlers.LoggerHandler import CrabLogger
 
 import importlib
 import os
 import ssl
 
-
 def run_crab(path):
 
     settings = importlib.import_module('settings')
-
     logger = CrabLogger("Web", settings)
 
     with ThreadedHTTPServer((settings.HOST, settings.PORT), ViewHandler) as httpd:
