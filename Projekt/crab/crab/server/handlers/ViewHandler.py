@@ -1,5 +1,5 @@
 from crab.server.handlers.LoggerHandler import CrabLogger
-from crab.utiles.register import Error404Handler, Error403Handler, Error500Handler
+from crab.utiles.register import Error404Handler, Error403Handler, Error500Handler, Error400Handler
 from crab.server.handlers.constans import Methods
 
 from http.server import BaseHTTPRequestHandler

@@ -65,6 +65,22 @@ class Error403Handler(BaseErrorHandler):
     def error(request):
         return JsonResponse(json.dumps({'status_code': http.HTTPStatus.NOT_FOUND,'error': ''}))
 
+# 400 error page handler
+class Error400Handler(BaseErrorHandler):
+    status_code = http.HTTPStatus.FORBIDDEN
+
+    def __init__(self, error_fn):
+        super().__init__(error_fn)
+        Error400Handler._error_handler = error_fn
+
+    @staticmethod
+    def run(request):
+        return Error400Handler._error_handler(request) if Error400Handler._error_handler else Error400Handler.error(request)
+
+    @staticmethod
+    def error(request):
+        return JsonResponse(json.dumps({'status_code': http.HTTPStatus.NOT_FOUND,'error': ''}))
+
 def post(view_func):
     @wraps(view_func)
     def wrapper(request, *args, **kwargs):

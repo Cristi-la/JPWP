@@ -1,8 +1,8 @@
 from crab.response.generic import BaseResponse, JsonResponse, XmlResponse, PDFResponse, ImageResponse
-from crab.utiles.register import Error404Handler, Error403Handler, Error500Handler
+from crab.utiles.register import Error404Handler, Error403Handler, Error500Handler, Error400Handler
 from crab.utiles.register import post, get
-from crab.utiles.serializer import add_time
-
+from crab.utiles.serializer import add_time, fun_execution_logger, validate_arguments
+from crab.server.handlers import ViewHandler
 import json
 from datetime import datetime, timedelta
 from models import *
@@ -16,10 +16,12 @@ def home(request):
     return response
 
 @get
+@validate_arguments(ViewHandler, str)
 def hello(request, name):
     response_data = {'message': f'Hello {name}'}
     return JsonResponse(json.dumps(response_data))
 
+@fun_execution_logger
 def request(request):
     return JsonResponse(json.dumps({
         'status_code': request.status_code,
@@ -80,4 +82,8 @@ def error403_view(request):
 
 @Error500Handler
 def error500_view(request):
+    return JsonResponse(json.dumps({'status_code': 'test500'}))
+
+@Error400Handler
+def error400_view(request):
     return JsonResponse(json.dumps({'status_code': 'test500'}))
