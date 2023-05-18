@@ -27,7 +27,7 @@ class Error404Handler(BaseErrorHandler):
     @staticmethod
     def run(request):
         return Error404Handler._error_handler(request) if Error404Handler._error_handler else Error404Handler.error(request)
-    
+
     @staticmethod
     def error(request):
         return JsonResponse(json.dumps({'status_code': http.HTTPStatus.NOT_FOUND,'error': ''}))
@@ -43,7 +43,7 @@ class Error500Handler(BaseErrorHandler):
     @staticmethod
     def run(request):
         return Error500Handler._error_handler(request) if Error500Handler._error_handler else Error500Handler.error(request)
-    
+
     @staticmethod
     def error(request):
         return JsonResponse(json.dumps({'status_code': http.HTTPStatus.NOT_FOUND,'error': ''}))
@@ -60,19 +60,30 @@ class Error403Handler(BaseErrorHandler):
     @staticmethod
     def run(request):
         return Error403Handler._error_handler(request) if Error403Handler._error_handler else Error403Handler.error(request)
-    
+
     @staticmethod
     def error(request):
         return JsonResponse(json.dumps({'status_code': http.HTTPStatus.NOT_FOUND,'error': ''}))
-   
-    
+
+# 400 error page handler
+class Error400Handler(BaseErrorHandler):
+    status_code = http.HTTPStatus.FORBIDDEN
+
+    def __init__(self, error_fn):
+        super().__init__(error_fn)
+        Error400Handler._error_handler = error_fn
+
+    @staticmethod
+    def run(request):
+        return Error400Handler._error_handler(request) if Error400Handler._error_handler else Error400Handler.error(request)
+
+    @staticmethod
+    def error(request):
+        return JsonResponse(json.dumps({'status_code': http.HTTPStatus.NOT_FOUND,'error': ''}))
 
 def post(view_func):
     @wraps(view_func)
     def wrapper(request, *args, **kwargs):
-        settings = importlib.import_module("settings")
-        logger = CrabLogger(__name__, settings)
-        logger
         if request.method == Methods.POST:
             return view_func(request, *args, **kwargs)
         else:
@@ -82,7 +93,6 @@ def post(view_func):
 def get(view_func):
     @wraps(view_func)
     def wrapper(request, *args, **kwargs):
-
         if request.method == Methods.GET:
             return view_func(request, *args, **kwargs)
         else:

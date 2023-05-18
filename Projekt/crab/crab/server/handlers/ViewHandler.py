@@ -1,5 +1,5 @@
 from crab.server.handlers.LoggerHandler import CrabLogger
-from crab.utiles.register import Error404Handler, Error403Handler, Error500Handler
+from crab.utiles.register import Error404Handler, Error403Handler, Error500Handler, Error400Handler
 from crab.server.handlers.constans import Methods
 
 from http.server import BaseHTTPRequestHandler
@@ -38,10 +38,10 @@ class ViewHandler(BaseHTTPRequestHandler):
 
     
     def handle_request(self):
-        method = self.command
+        self.method = self.command
         self.logger.debug(f"Test HTTPS method: {self.command}")
 
-        if method != 'GET' and method != 'POST':
+        if self.method != 'GET' and self.method != 'POST':
             self.status_code = http.HTTPStatus.NOT_FOUND
             response = Error404Handler.run(self)
             self.logger.debug(f"Handler404 {self.path}:{self.status_code}")
@@ -55,7 +55,7 @@ class ViewHandler(BaseHTTPRequestHandler):
                     if url_pattern[0] == self.path:
                         self.logger.debug(f"Path Match: {self.path}")
                         response = url_pattern[1](self)
-                        self.logger.debug(f"{method} {self.path}:{self.status_code}")
+                        self.logger.debug(f"{self.method} {self.path}:{self.status_code}")
                         self.get(response)
                         break
                 else:
@@ -66,7 +66,7 @@ class ViewHandler(BaseHTTPRequestHandler):
                         params = match.groupdict()
                         self.logger.debug(f"URL params: {params}")
                         response = url_pattern[1](self, **params)
-                        self.logger.debug(f"{method} {self.path}:{self.status_code}")
+                        self.logger.debug(f"{self.method} {self.path}:{self.status_code}")
                         self.get(response)
                         break
             else:
