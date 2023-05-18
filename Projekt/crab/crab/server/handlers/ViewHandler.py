@@ -38,10 +38,9 @@ class ViewHandler(BaseHTTPRequestHandler):
 
     
     def handle_request(self):
-        self.method = self.command
         self.logger.debug(f"Test HTTPS method: {self.command}")
 
-        if self.method != 'GET' and self.method != 'POST':
+        if self.method not in [Methods.GET, Methods.POST]:
             self.status_code = http.HTTPStatus.NOT_FOUND
             response = Error404Handler.run(self)
             self.logger.debug(f"Handler404 {self.path}:{self.status_code}")
@@ -96,11 +95,12 @@ class ViewHandler(BaseHTTPRequestHandler):
 
     # Supported html metods
     def do_GET(self):
+        self.method = Methods.GET
         self.logger.debug(f'User `GET` request path: {self.path}')
         self.handle_request()
-        self.method = Methods.GET
-
+        
     def do_POST(self):
+        self.method = Methods.POST
         self.logger.debug(f'User `POST` request path: {self.path}')
         self.handle_request()
-        self.method = Methods.POST
+        
