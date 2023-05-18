@@ -50,7 +50,7 @@ def database(request):
 
     Addresses.create()
     Residents.create()
-    if len(Addresses.read()) < 15:
+    if len(Addresses.read()) < 5:
         addresses_dict = [{'street': 'Krakowska', 'city': 'Krakow', 'province': 'Malopolska', 'zip_code': '30-320'},
                         {'street': 'Mazowiecka', 'city': 'Krakow', 'province': 'Malopolska', 'zip_code': '30-424'},
                         {'street': 'Zalewska', 'city': 'Krakow', 'province': 'Malopolska', 'zip_code': '30-333'},
@@ -69,12 +69,10 @@ def database(request):
 
     return JsonResponse(json.dumps(result))
 
-
-
 # Error handlers
-@Error404Handler
-def error404_view(request):
-    return JsonResponse(json.dumps({'status_code': 'test404'}))
+#@Error404Handler
+#def error404_view(request):
+#    return JsonResponse(json.dumps({'status_code': 'test404'}))
 
 @Error403Handler
 def error403_view(request):
